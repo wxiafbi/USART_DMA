@@ -24,7 +24,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include<string.h>
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -74,7 +74,7 @@ int main(void)
     HAL_Init();
 
     /* USER CODE BEGIN Init */
-    //uint8_t Senbuff[] = "\r\n**** Serial Output Message by DMA ***\r\n   UART DMA Test \r\n   Zxiaoxuan"; //定义数据发送数组
+    uint8_t Senbuff[] = "\r\n**** Serial Output Message by DMA ***\r\n   UART DMA Test \r\n   Zxiaoxuan"; //定义数据发送数组
     /* USER CODE END Init */
 
     /* Configure the system clock */
@@ -98,16 +98,8 @@ int main(void)
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
-        if (recv_end_flag == 1) //接收完成标志
-        {
-
-            DMA_Usart_Send(rx_buffer, rx_len);
-            rx_len = 0;        //清除计数
-            recv_end_flag = 0; //清除接收结束标志位
-
-            memset(rx_buffer, 0, rx_len);
-        }
-        HAL_UART_Receive_DMA(&huart1, rx_buffer, BUFFER_SIZE); //重新打开DMA接收
+        HAL_UART_Transmit_DMA(&huart1, (uint8_t *)Senbuff, sizeof(Senbuff));
+        HAL_Delay(1000);
     }
     /* USER CODE END 3 */
 }

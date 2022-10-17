@@ -22,6 +22,7 @@
 #include "stm32f1xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -246,7 +247,12 @@ void USART1_IRQHandler(void)
         // temp  = hdma_usart1_rx.Instance->NDTR;//读取NDTR寄存器 获取DMA中未传输的数据个数，
         //这句和上面那句等效
         rx_len = BUFFER_SIZE - temp; //总计数减去未传输的数据个数，得到已经接收的数据个数
-        recv_end_flag = 1;           // 接受完成标志位置1
+        //recv_end_flag = 1;           // 接受完成标志位置1
+        DMA_Usart_Send(rx_buffer, rx_len);
+        rx_len = 0;        //清除计数
+        //recv_end_flag = 0; //清除接收结束标志位
+        memset(rx_buffer, 0, rx_len);
+        HAL_UART_Receive_DMA(&huart1, rx_buffer, BUFFER_SIZE); //重新打开DMA接收
     }
 
     /* USER CODE END USART1_IRQn 0 */
